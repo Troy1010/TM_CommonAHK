@@ -1,0 +1,232 @@
+CoordMode, Mouse, Screen
+;MouseGetPos, xPos1, yPos1
+;Tooltip %xPos1% %yPos1%
+
+;	UNIVERSAL LOOP
+Loop
+{
+	if Type = 1 ;Force Typing
+	{
+		bTyping = 1
+	}
+	if (bTyping = 1) or !WinActive("Heroes")
+	{
+		sleep 10
+		continue
+	}
+	;Hero-specific
+	if Type = 6 ;Abby
+	{
+		if GetKeyState("q","P") and GetKeyState("e","P")
+		{
+			Send {q}
+		}
+		if GetKeyState("e","P")
+		{
+			if ((A_TickCount - fAbbyEStartTime) < 1000)
+			{
+				Send {e}
+			}
+			else if !bFinishedAbbyELoop = 1
+			{
+				Send {e down}
+				bFinishedAbbyELoop = 1
+			}
+		}
+		else
+		{
+			if !bFinishedAbbyELoop = 0
+			{
+				Send {e up}
+				bFinishedAbbyELoop = 0
+			}
+			fAbbyEStartTime := A_TickCount
+		}
+	}
+	if Type = 11 ;Azmo
+	{
+		if GetKeyState("3","P")
+		{
+			Send {y}
+			fAzmo3StartTime := A_TickCount
+			bAzmoCountdownStarted = 1
+		}
+		if bAzmoCountdownStarted
+		{
+			if (A_TickCount - fAzmo3StartTime) > 28000
+			{
+				SoundPlay bell2.wav
+				bAzmoCountdownStarted = 0
+			}
+		}
+	}
+	if Type = 5 ;Arthas
+	{
+		if bArthasUltLoop = 1
+		{
+			if (A_TickCount - fArthasUltStartTime) > 20000
+			{
+				bArthasUltLoop = 0
+			}
+			else
+			{
+				Send {r}
+			}
+		}
+	}
+	if Type = 10 ;Gall
+	{
+		if GetKeyState("q","P")
+		{
+			Send {q}
+		}
+	}
+	sleep 10
+}
+return
+
+
+
+;	MOUSEBUTTONS
+XButton1::F13
+!XButton1::F13
+XButton2::F14
+!XButton2::F14
+;	SET bTYPING
+~Enter::
+~NumpadEnter::
+if bTyping = 1
+{
+	bTyping = 0
+}
+else
+{
+	bTyping = 1
+}
+return
+~RButton::
+~Escape::
+bTyping = 0
+return
+;	HOTKEY TYPE
+F13::
+Type = 1 ;Force Typing
+bTyping = 1
+Send {end}
+return
+F14::
+Type = 2 ;Default
+bTyping = 0
+return
+F15::
+Type = 6 ;Abathur
+Send {F9}
+bTyping = 0
+return
+F16::
+Type = 5 ;Arthas
+bArthasUltLoop = 0
+StartTimeArthas := 0
+bTyping = 0
+return
+F17::
+Type = 4 ;Kharazim
+bTyping = 0
+return
+F18::
+Type = 7 ;Zeratul
+bTyping = 0
+return
+F19::
+Type = 8 ;
+bTyping = 0
+return
+!F13::
+Type = 9 ;
+sSylvEStage = 0
+bTyping = 0
+return
+!F14::
+Type = 10 ;Gall
+bTyping = 0
+return
+!F15::
+Type = 11 ;Azmodan
+bTyping = 0
+return
+!F16::
+Type = 12 ;
+bTyping = 0
+return
+!F17::
+Type = 13 ;
+bTyping = 0
+return
+!F18::
+Type = 14 ;
+bTyping = 0
+return
+!F19::
+Type = 15 ;Test
+bRexGo = 0
+bTyping = 0
+return
+
+
+#If WinActive("Heroes")
+;	MOUSEBUTTONS
+XButton1::F11
+!XButton1::F11
+XButton2::F12
+!XButton2::F12
+#if WinActive("Heroes") and (!bTyping = 1)
+;	HOTKEY S
+~s::
+Send {shift down}
+MouseClick Right
+Send {shift up}
+return
+;	HOTKEY Z
+~z::
+MouseGetPos, xPos1, yPos1
+MouseMove, 300, 1010
+Send {alt down}
+MouseClick Left
+Send {alt up}
+MouseMove, (xPos1), (yPos1)
+return
+;	CONDITIONAL HOTKEYS
+#if WinActive("Heroes") and (!bTyping = 1) and (Type = 6) ;Abby
+2::
+Send {F10}
+MouseMove, (A_ScreenWidth // 2), (A_ScreenHeight // 2)
+Send {5}
+return
+#if WinActive("Heroes") and (!bTyping = 1) and (Type = 7) ;Zeratul
+b::
+Send {b}
+Send {6}
+Send {r}
+Send {7}
+return
+#if WinActive("Heroes") and (!bTyping = 1) and (Type = 5) ;Arthas
+b::
+Send {r}
+if bArthasUltLoop = 1
+{
+	SoundPlay bell2.wav
+	bArthasUltLoop = 0
+}
+else
+{
+	SoundPlay bell1.wav
+	fArthasUltStartTime := A_TickCount
+	bArthasUltLoop = 1
+}
+return
+#if WinActive("Heroes") and (!bTyping = 1) and (Type = 15) ;Test
+return
+
+
+
+

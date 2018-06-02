@@ -1,0 +1,25 @@
+CoordMode, Mouse, Screen
+
+;;;;;;;;;;;;;;;;;; Mousebuttons
+XButton1::F13
+!XButton1::F13
+XButton2::F14
+!XButton2::F14
+;;;;;;;;;;;;;;;;;; Set bTYPING
+[::
+bTyping = 1
+return
+]::
+bTyping = 0
+return
+;;;;;;;;;;;;;;;;;;
+#if (!bTyping = 1)
+~e::
+Send {q}
+Send {r}
+Send {5}
+return
+
+
+
+

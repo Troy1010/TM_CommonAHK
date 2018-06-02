@@ -1,0 +1,18 @@
+CoordMode, Mouse, Screen
+
+q::
+Send {o}
+Send {End}
+return
+w::
+Send {r}
+Send {Home}
+return
+e::
+Send {ctrl down}
+Send {,}
+Send {ctrl up}
+Send {o}
+Send {End}
+return
+

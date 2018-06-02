@@ -1,0 +1,3 @@
+;	MOUSEBUTTONS
+XButton1::F13
+!XButton1::F13

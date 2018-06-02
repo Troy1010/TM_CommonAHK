@@ -1,0 +1,20 @@
+\::
+if bActive
+{
+	bActive = 0
+}
+else
+{
+	bActive = 1
+}
+return
+
+#if bActive
+V::
+Send {q Up}
+Send {q Down}
+return
+Q::
+Send {q Down}
+Send {q Up}
+return

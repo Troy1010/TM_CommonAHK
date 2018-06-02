@@ -1,0 +1,38 @@
+CoordMode, Mouse, Screen
+
+
+
+
+XButton1::F13
+;XButton2::q
+
+#IfWinActive Path
+RButton::
+Send {F11 down}
+Send {RButton down}
+Loop
+{
+	if !GetKeyState("RButton","P")
+	{
+		Send {F11 up}
+		Send {RButton up}
+		break
+	}
+	sleep 10
+}
+return
+e::
+Send {F11 down}
+Send {e down}
+Loop
+{
+	if !GetKeyState("e","P")
+	{
+		Send {F11 up}
+		Send {e up}
+		break
+	}
+	sleep 10
+}
+return
+`::RButton

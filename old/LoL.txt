@@ -1,0 +1,4 @@
+F5::
+Send {a}
+Send {d}
+Send {enter}
