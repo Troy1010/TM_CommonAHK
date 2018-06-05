@@ -16,10 +16,19 @@ __GetActiveWinPos() {
 	WinGetPos, xPos, yPos, , , A	;A:ActiveWindow
 	Tooltip, xPos:%xPos% yPos:%yPos%
 }
+return
+__WaiterTooltip:
+	Tooltip
+	return
 ;-------Public
 
 CloseMouseoverWindow() {
+	sText := "asdf"
 	MouseGetPos,,, vMouseoverWin
+	if (vMouseoverWin == 0x1012e) ;Desktop
+	{
+		return
+	}
 	WinClose, ahk_id %vMouseoverWin%
 }
 
@@ -45,6 +54,15 @@ SnapWindowLeft() {
 	return
 }
 
+SnapWindowUpLeft() {
+	__UnsnapIfNecessary()
+	Send {LWin Down}
+	Send {Left}
+	Send {Up}
+	Send {LWin Up}
+	return
+}
+
 SnapWindowRight() {
 	__UnsnapIfNecessary()
 	Send {LWin Down}
@@ -63,10 +81,51 @@ SnapWindowFullscreen() {
 	return
 }
 
-
 WinTab() {
 	Send {LWin Down}
 	Send {Tab}
 	Send {LWin Up}
 	return
+}
+
+BeepIf(bBool) {
+	if (bBool)
+	{
+		SoundPlay, *-1
+	}
+	return
+}
+
+Tooltip2(s,iTimer=2500) {
+	Tooltip, %s%
+	SetTimer, __WaiterTooltip, %iTimer%
+}
+
+;Convenience function to make it obvious that it is taking an expression
+MsgBox2(s,bBool=True) {
+	if (bBool)
+	{
+		MsgBox % s
+	}
+}
+
+GetActiveWinDir() {
+	WinGetText, sText, A
+	RegExMatch(sText,"Address: \K\V+",sDir)
+	if (!IsDir(sDir))
+		sDir = 
+	return sDir
+}
+
+IsDir(s) {
+	return InStr( FileExist(s), "D")
+}
+
+OpenCmdAtActiveWindow() {
+	address := GetActiveWinDir()
+
+	if (address <> "") 
+		Run, cmd.exe, %address%
+	else 
+		Run, cmd.exe, C:\
 }
