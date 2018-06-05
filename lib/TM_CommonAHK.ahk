@@ -23,13 +23,21 @@ __WaiterTooltip:
 ;-------Public
 
 CloseMouseoverWindow() {
-	sText := "asdf"
 	MouseGetPos,,, vMouseoverWin
 	if (vMouseoverWin == 0x1012e) ;Desktop
 	{
 		return
 	}
 	WinClose, ahk_id %vMouseoverWin%
+}
+
+MinimizeMouseoverWindow() {
+	MouseGetPos,,, vMouseoverWin
+	if (vMouseoverWin == 0x1012e) ;Desktop
+	{
+		return
+	}
+	WinMinimize, ahk_id %vMouseoverWin%
 }
 
 CloseActiveWindow() {
@@ -88,6 +96,39 @@ WinTab() {
 	return
 }
 
+;Concatenation operator is .
+NarrateActiveWindow() {
+	sReturning := ""
+	WinGet, sTitle, ProcessName, A
+	sReturning .= "Title:" sTitle
+	WinGet, vID, ID, A
+	sReturning .= "`nID:" vID
+	WinGet, cControlList, ControlList, A
+	sReturning .= "`nControlList:" Narrate(cControlList)
+	return sReturning
+}
+
+Narrate(vVar) {
+	sReturning := ""
+	if IsObject(vVar) {
+		sReturning := "Object.."
+		for vKey, vValue in vVar {
+			sReturning .= "`n  " vKey ":" vValue
+		}
+	}
+	else if (InStr(vVar,"`n")) {
+		sReturning := "MultilineString.."
+		cCollection := StrSplit(vVar,"`n")
+		for vKey, vValue in cCollection {
+			sReturning .= "`n  " vValue
+		}
+	}
+	else {
+		sReturning := "" . vVar ;Probably unnecessary
+	}
+	return sReturning
+}
+
 BeepIf(bBool) {
 	if (bBool)
 	{
@@ -101,15 +142,19 @@ Tooltip2(s,iTimer=2500) {
 	SetTimer, __WaiterTooltip, %iTimer%
 }
 
-;Convenience function to make it obvious that it is taking an expression
-MsgBox2(s,bBool=True) {
-	if (bBool)
+MsgBox2(s,bCopyable:=false) {
+	if (!bCopyable)
 	{
 		MsgBox % s
 	}
+	else
+	{
+		Gui, Add,Edit,ReadOnly,%s%
+		Gui, Show
+	}
 }
 
-GetActiveWinDir() {
+GetActiveExplorerWinDir() {
 	WinGetText, sText, A
 	RegExMatch(sText,"Address: \K\V+",sDir)
 	if (!IsDir(sDir))
@@ -122,10 +167,15 @@ IsDir(s) {
 }
 
 OpenCmdAtActiveWindow() {
-	address := GetActiveWinDir()
+	address := GetActiveExplorerWinDir()
 
 	if (address <> "") 
 		Run, cmd.exe, %address%
 	else 
 		Run, cmd.exe, C:\
+}
+
+ControlSend2(vControl:="",vKeys:="",vWinTitle:="",vWinText:="",vExcludeTitle:="",vExcludeText:="") {
+	ControlFocus, %vControl%, %vWinTitle%, %vWinText%, %vExcludeTitle%, %vExcludeText%
+	ControlSend, %vControl%, %vKeys%, %vWinTitle%, %vWinText%, %vExcludeTitle%, %vExcludeText%
 }

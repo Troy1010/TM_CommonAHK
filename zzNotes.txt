@@ -1,0 +1,3 @@
+-------Misc
+StringConcatOperator is .
+ControlSend will often fail if ControlFocus is not also used.

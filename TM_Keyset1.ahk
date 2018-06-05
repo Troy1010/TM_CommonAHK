@@ -4,11 +4,18 @@ bDebug := false
 #include <TM_CommonAHK>
 ;-------Globals
 iXB2Count := 0
-bCloseMode := false
-DiscordHWND := 0
+bEasyResetMode := false
+;-------
+Loop {
+	if (iXB2Count ==0)
+	{
+		bEasyResetMode := false
+	}
+	sleep, 10
+}
 ;-------
 return
-;-------Helper Functions, Labels
+;-------Helper Labels
 WaiterXB2:
 	iXB2Count := 0
 	SoundPlay, C:\TMinus1010\Media\Sounds\26777__junggle__btn402.wav
@@ -16,22 +23,21 @@ WaiterXB2:
 ;-------Keyset
 MButton::WinTab()
 XButton2::
-	if (bCloseMode)
+	if (bEasyResetMode)
 	{
 		iXB2Count := 0
-		bCloseMode := false
+		bEasyResetMode := false
 	}
 	else
 	{
 		iXB2Count += 1
 	}
-	SetTimer, WaiterXB2, 1000
+	SetTimer, WaiterXB2, 500
 	return
 XButton2 Up::
 	SetTimer, WaiterXB2, off
 	return
 XButton1::F18
-	;ControlSend,, {b down} , ahk_exe Discord.exe
 #if (iXB2Count != 0)
 LButton::
 	if (iXB2Count == 1)
@@ -46,12 +52,28 @@ LButton::
 	{
 		SnapWindowUpLeft()
 	}
+	else if (iXB2Count == 4)
+	{
+		Send {LButton Down}
+		return
+	}
 	iXB2Count := 0
+	return
+LButton Up::
+	if (iXB2Count == 4)
+	{
+		Send {LButton Up}
+		return
+	}
 	return
 RButton::
 	if (iXB2Count == 1)
 	{
 		SnapWindowRight()
+	}
+	if (iXB2Count == 2)
+	{
+		SnapWindowFullscreen()
 	}
 	iXB2Count := 0
 	return
@@ -74,52 +96,44 @@ XButton1::
 		sleep 100
 		SnapWindowUpLeft()
 	}
+	else if (iXB2Count ==4)
+	{
+		ControlSend2(,"{space}","ahk_exe Google Play Music Desktop Player.exe")
+	}
 	iXB2Count := 0
 	return
-WheelUp::iXB2Count := 0, SnapWindowFullscreen()
-WheelDown::CloseMouseoverWindow(), bCloseMode := true
+WheelUp::
+	if (iXB2Count ==1)
+	{
+		CloseMouseoverWindow()
+		bEasyResetMode := true
+	}
+	return
+WheelDown::
+	if (iXB2Count ==1)
+	{
+		CloseMouseoverWindow()
+		bEasyResetMode := true
+	}
+	else if (iXB2Count ==4)
+	{
+		Send {ctrl down}w{ctrl up}
+		bEasyResetMode := true
+	}
+	return
 #if (bDebug = true)
-z::
-	WinGet, sTitle, ProcessName, A
-	sTempGlobal := sTitle
-	MsgBox2(sTitle)
+F1::
+	MsgBox2(NarrateActiveWindow(),true)
 	return
-x::
-	;sString := "Discord.exe"
-	sString := "Discord.exe"
-	SetTitleMatchMode, 2
-	WinGet, DiscordHWND, ID, ahk_exe Discord.exe
-	sString := DiscordHWND
-	MsgBox2(sString)
+F2::
+	ControlSend2("Chrome_RenderWidgetHostHWND1","{z down}","ahk_exe Discord.exe")
 	return
-c::
-	WinGet, sTitle, ProcessName, A
+F3::
+	ControlSend2("Intermediate D3D Window1","{z down}","ahk_exe Discord.exe")
 	return
-v::
-	Run, cmd.exe, C:\TMinus1010\Projects
+F4::
+	ControlSend2(,"b","ahk_exe Discord.exe")
 	return
-b::
-	OpenCmdAtActiveWindow()
-	return
-n::
-	WinGetText, sText, A
-	if (IsDir(sText))
-		Tooltip2(sText)
-	else
-		Tooltip2("no  "+sText)
-	return
-m::
-	SetTitleMatchMode, 2
-	WinGetTitle, sTitle, A
-	if (IsDir(sTitle))
-		Tooltip2("True  address:"+sTitle)
-	else
-		Tooltip2("False  address:"+sTitle)
-	return
-a::
-	Tooltip2(IsDir("C:\Tminus1010"))
-	return
-s::
-	Tooltip2(IsDir("C:\Tminus10"))
-	return
-		
+F5::
+    SetTitleMatchMode, 2
+    ControlSend, ahk_exe Discord.exe, yo{enter}
