@@ -10,6 +10,15 @@ bEasyResetMode := false
 ;-------
 return
 ;-------Helper Functions, Labels
+;Convenience for writing single-line.
+CloseChromeWindow() {
+	Send {ctrl down}w{ctrl up}
+}
+;Convenience for writing single-line.
+EasyResetMode() {
+	global bEasyResetMode
+	bEasyResetMode := true
+}
 ResetGlobals() {
 	global bEasyResetMode
 	global iXB2Count
@@ -37,95 +46,37 @@ XButton2 Up::
 	SetTimer, WaiterXB2, off
 	return
 XButton1::F18
-#if (iXB2Count != 0)
-LButton::
-	if (iXB2Count == 1)
-	{
-		SnapWindowLeft()
-	}
-	else if (iXB2Count == 2)
-	{
-		SnapWindowBotLeft()
-	}
-	else if (iXB2Count == 3)
-	{
-		SnapWindowUpLeft()
-	}
-	else if (iXB2Count == 4)
-	{
-		Send {LButton Down}
-		return
-	}
-	ResetGlobals()
-	return
-LButton Up::
-	if (iXB2Count == 4)
-	{
-		Send {LButton Up}
-		return
-	}
-	ResetGlobals()
-	return
-RButton::
-	if (iXB2Count == 1)
-	{
-		SnapWindowRight()
-	}
-	if (iXB2Count == 2)
-	{
-		SnapWindowFullscreen()
-	}
-	ResetGlobals()
-	return
+#if (iXB2Count == 1)
+LButton::ResetGlobals(),SnapWindowLeft()
+RButton::ResetGlobals(),SnapWindowRight()
 XButton1::
-	if (iXB2Count ==1)
-	{
-		Run, "C:\TMinus1010"
-		sleep 100
-		SnapWindowBotLeft()
-	}
-	else if (iXB2Count ==2)
-	{
-		Run, "C:\TMinus1010\Projects\Coding"
-		sleep 100
-		SnapWindowBotLeft()
-	}
-	else if (iXB2Count ==3)
-	{
-		OpenCmdAtActiveWindow()
-		sleep 100
-		SnapWindowUpLeft()
-	}
-	else if (iXB2Count ==4)
-	{
-		ControlSend2(,"{space}","ahk_exe Google Play Music Desktop Player.exe")
-	}
+	Run, "C:\TMinus1010"
+	sleep 100
+	SnapWindowBotLeft()
 	ResetGlobals()
 	return
-WheelUp::
-	if (iXB2Count ==1)
-	{
-		CloseMouseoverWindow()
-		bEasyResetMode := true
-		return
-	}
+WheelUp::EasyResetMode(),MinimizeMouseoverWindow()
+WheelDown::EasyResetMode(),CloseMouseoverWindow()
+#if (iXB2Count == 2)
+LButton::ResetGlobals(),SnapWindowBotLeft()
+RButton::ResetGlobals(),SnapWindowFullscreen()
+XButton1::
+	Run, "C:\TMinus1010\Projects\Coding"
+	sleep 100
+	SnapWindowBotLeft()
 	ResetGlobals()
 	return
-WheelDown::
-	if (iXB2Count ==1)
-	{
-		CloseMouseoverWindow()
-		bEasyResetMode := true
-		return
-	}
-	else if (iXB2Count ==4)
-	{
-		Send {ctrl down}w{ctrl up}
-		bEasyResetMode := true
-		return
-	}
+#if (iXB2Count == 3)
+XButton1::
+	OpenCmdAtActiveWindow()
+	sleep 100
+	SnapWindowUpLeft()
 	ResetGlobals()
 	return
+LButton::ResetGlobals(),SnapWindowUpLeft()
+#if (iXB2Count == 4)
+RButton::EasyResetMode(),CloseChromeWindow()
+XButton1::ResetGlobals(),ControlSend2(,"{space}","ahk_exe Google Play Music Desktop Player.exe")
 #if (bDebug = true)
 F1::
 	MsgBox2(NarrateActiveWindow(),true)
