@@ -1,3 +1,5 @@
+#-------Safety Exit
+^Escape::ExitApp
 #-------Settings
 bDebug := false
 #-------Imports
@@ -6,18 +8,16 @@ bDebug := false
 iXB2Count := 0
 bEasyResetMode := false
 ;-------
-Loop {
-	if (iXB2Count ==0)
-	{
-		bEasyResetMode := false
-	}
-	sleep, 10
-}
-;-------
 return
-;-------Helper Labels
-WaiterXB2:
+;-------Helper Functions, Labels
+ResetGlobals() {
+	global bEasyResetMode
+	global iXB2Count
+	bEasyResetMode := false
 	iXB2Count := 0
+}
+WaiterXB2:
+	ResetGlobals()
 	SoundPlay, C:\TMinus1010\Media\Sounds\26777__junggle__btn402.wav
 	return
 ;-------Keyset
@@ -25,8 +25,7 @@ MButton::WinTab()
 XButton2::
 	if (bEasyResetMode)
 	{
-		iXB2Count := 0
-		bEasyResetMode := false
+		ResetGlobals()
 	}
 	else
 	{
@@ -57,7 +56,7 @@ LButton::
 		Send {LButton Down}
 		return
 	}
-	iXB2Count := 0
+	ResetGlobals()
 	return
 LButton Up::
 	if (iXB2Count == 4)
@@ -65,6 +64,7 @@ LButton Up::
 		Send {LButton Up}
 		return
 	}
+	ResetGlobals()
 	return
 RButton::
 	if (iXB2Count == 1)
@@ -75,7 +75,7 @@ RButton::
 	{
 		SnapWindowFullscreen()
 	}
-	iXB2Count := 0
+	ResetGlobals()
 	return
 XButton1::
 	if (iXB2Count ==1)
@@ -100,26 +100,31 @@ XButton1::
 	{
 		ControlSend2(,"{space}","ahk_exe Google Play Music Desktop Player.exe")
 	}
-	iXB2Count := 0
+	ResetGlobals()
 	return
 WheelUp::
 	if (iXB2Count ==1)
 	{
 		CloseMouseoverWindow()
 		bEasyResetMode := true
+		return
 	}
+	ResetGlobals()
 	return
 WheelDown::
 	if (iXB2Count ==1)
 	{
 		CloseMouseoverWindow()
 		bEasyResetMode := true
+		return
 	}
 	else if (iXB2Count ==4)
 	{
 		Send {ctrl down}w{ctrl up}
 		bEasyResetMode := true
+		return
 	}
+	ResetGlobals()
 	return
 #if (bDebug = true)
 F1::
