@@ -16,7 +16,8 @@ __GetActiveWinPos() {
 	WinGetPos, xPos, yPos, , , A	;A:ActiveWindow
 	Tooltip, xPos:%xPos% yPos:%yPos%
 }
-return
+
+;---Label
 __WaiterTooltip:
 	Tooltip
 	return

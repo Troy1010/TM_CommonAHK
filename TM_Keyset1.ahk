@@ -1,14 +1,35 @@
-#-------Safety Exit
-^Escape::ExitApp
 #-------Settings
 bDebug := false
-#-------Imports
-#include <TM_CommonAHK>
+Process, Priority, , H
 ;-------Globals
 iXB2Count := 0
 bEasyResetMode := false
+iScrollCount := 0
+;-------
+Loop
+{
+	if (iScrollCount > 0) {
+		if (GetKeyState("WheelUp","P") != 0)
+		{
+			iScrollCount -= 1
+			SendInput {Click WheelUp}
+		}
+	}
+	else if (iScrollCount < 0) {
+		if (GetKeyState("WheelDown","P") != 0)
+		{
+			iScrollCount += 1
+			SendInput {Click WheelDown} ;These probably don't need to be looped.
+		}
+	}
+	sleep 2
+}
 ;-------
 return
+#-------Safety Exit
+^Escape::ExitApp
+#-------Imports
+#include <TM_CommonAHK>
 ;-------Helper Functions, Labels
 ;Convenience for writing single-line.
 CloseChromeWindow() {
@@ -20,10 +41,12 @@ EasyResetMode() {
 	bEasyResetMode := true
 }
 ResetGlobals() {
+	global iScrollCount
 	global bEasyResetMode
 	global iXB2Count
 	bEasyResetMode := false
 	iXB2Count := 0
+	iScrollCount := 0
 }
 WaiterXB2:
 	ResetGlobals()
@@ -65,6 +88,16 @@ XButton1::
 	sleep 100
 	SnapWindowBotLeft()
 	ResetGlobals()
+	return
+WheelUp::
+	EasyResetMode()
+	SetKeyDelay, 10
+	iScrollCount += 10
+	return
+WheelDown::
+	EasyResetMode()
+	SetKeyDelay, 10
+	iScrollCount -= 10
 	return
 #if (iXB2Count == 3)
 XButton1::
