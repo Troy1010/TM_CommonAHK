@@ -3,12 +3,14 @@ __UnsnapIfNecessary() {
 	bUnsnap = false
 	WinGetPos, xPos, yPos, , , A	;A:ActiveWindow
 	;!These checks will fail on a different screen resolution
-	if ((xPos = -7) and (yPos = 525)) or ((xPos = -7) and (yPos = 0)) or ((xPos = -8) and (yPos = -8)) or ((xPos = 953) and (yPos = 0)) or ((xPos = 953) and (yPos = 525)) or (!xPos and !yPos)
+	;if ((xPos = -7) and (yPos = 525)) or ((xPos = -7) and (yPos = 0)) or ((xPos = -8) and (yPos = -8)) or ((xPos = 953) and (yPos = 0)) or ((xPos = 953) and (yPos = 525)) or (!xPos and !yPos)
+	if (true)
 	{
 		Send {LWin Down}
 		Send {Up}
 		Send {Up}
 		Send {Up}
+		Send {Up} ;4th one should be unnecessary
 		Send {LWin Up}
 	}
 }

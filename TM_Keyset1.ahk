@@ -1,4 +1,4 @@
-#-------Settings
+;-------Settings
 bDebug := false
 Process, Priority, , H
 ;-------Globals
@@ -24,11 +24,11 @@ Loop
 	}
 	sleep 2
 }
-;-------
+;-------End Init
 return
-#-------Safety Exit
+;-------Safety Exit
 ^Escape::ExitApp
-#-------Imports
+;-------Imports
 #include <TM_CommonAHK>
 ;-------Helper Functions, Labels
 ;Convenience for writing single-line.
@@ -78,17 +78,6 @@ XButton1::
 	SnapWindowBotLeft()
 	ResetGlobals()
 	return
-WheelUp::EasyResetMode(),MinimizeMouseoverWindow()
-WheelDown::EasyResetMode(),CloseMouseoverWindow()
-#if (iXB2Count == 2)
-LButton::ResetGlobals(),SnapWindowBotLeft()
-RButton::ResetGlobals(),SnapWindowFullscreen()
-XButton1::
-	Run, "C:\TMinus1010\Projects\Coding"
-	sleep 100
-	SnapWindowBotLeft()
-	ResetGlobals()
-	return
 WheelUp::
 	EasyResetMode()
 	SetKeyDelay, 10
@@ -99,6 +88,17 @@ WheelDown::
 	SetKeyDelay, 10
 	iScrollCount -= 10
 	return
+#if (iXB2Count == 2)
+LButton::ResetGlobals(),SnapWindowBotLeft()
+RButton::ResetGlobals(),SnapWindowFullscreen()
+XButton1::
+	Run, "C:\TMinus1010_Local\Coding"
+	sleep 100
+	SnapWindowBotLeft()
+	ResetGlobals()
+	return
+WheelUp::EasyResetMode(),MinimizeMouseoverWindow()
+WheelDown::EasyResetMode(),CloseMouseoverWindow()
 #if (iXB2Count == 3)
 XButton1::
 	OpenCmdAtActiveWindow()
@@ -126,3 +126,4 @@ F4::
 F5::
     SetTitleMatchMode, 2
     ControlSend, ahk_exe Discord.exe, yo{enter}
+	
