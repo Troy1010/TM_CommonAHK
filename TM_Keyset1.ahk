@@ -48,12 +48,17 @@ ResetGlobals() {
 	iXB2Count := 0
 	iScrollCount := 0
 }
+IsDefaultContext() {
+	return !WinActive("Heroes")
+}
 WaiterXB2:
 	ResetGlobals()
 	SoundPlay, C:\TMinus1010\Media\Sounds\26777__junggle__btn402.wav
 	return
 ;-------Keyset
 MButton::WinTab()
+XButton1::F18
+#if IsDefaultContext()
 XButton2::
 	if (bEasyResetMode)
 	{
@@ -68,8 +73,7 @@ XButton2::
 XButton2 Up::
 	SetTimer, WaiterXB2, off
 	return
-XButton1::F18
-#if (iXB2Count == 1)
+#if IsDefaultContext() and (iXB2Count == 1)
 LButton::ResetGlobals(),SnapWindowLeft()
 RButton::ResetGlobals(),SnapWindowRight()
 XButton1::
@@ -88,7 +92,7 @@ WheelDown::
 	SetKeyDelay, 10
 	iScrollCount -= 10
 	return
-#if (iXB2Count == 2)
+#if IsDefaultContext() and (iXB2Count == 2)
 LButton::ResetGlobals(),SnapWindowBotLeft()
 RButton::ResetGlobals(),SnapWindowFullscreen()
 XButton1::
@@ -99,7 +103,7 @@ XButton1::
 	return
 WheelUp::EasyResetMode(),MinimizeMouseoverWindow()
 WheelDown::EasyResetMode(),CloseMouseoverWindow()
-#if (iXB2Count == 3)
+#if IsDefaultContext() and (iXB2Count == 3)
 XButton1::
 	OpenCmdAtActiveWindow()
 	sleep 100
@@ -107,10 +111,12 @@ XButton1::
 	ResetGlobals()
 	return
 LButton::ResetGlobals(),SnapWindowUpLeft()
-#if (iXB2Count == 4)
+#if IsDefaultContext() and (iXB2Count == 4)
 RButton::EasyResetMode(),CloseChromeWindow()
 XButton1::ResetGlobals(),ControlSend2(,"{space}","ahk_exe Google Play Music Desktop Player.exe")
-#if (bDebug = true)
+#if WinActive("Heroes")
+LWin::LAlt
+#if IsDefaultContext() and (bDebug = true)
 F1::
 	MsgBox2(NarrateActiveWindow(),true)
 	return
@@ -126,4 +132,6 @@ F4::
 F5::
     SetTitleMatchMode, 2
     ControlSend, ahk_exe Discord.exe, yo{enter}
+F6::
+	MsgBox2(NarrateActiveWindow(),true)
 	
