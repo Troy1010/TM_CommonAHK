@@ -116,9 +116,9 @@ LButton::ResetGlobals(),SnapWindowUpLeft()
 RButton::EasyResetMode(),CloseChromeWindow()
 XButton1::ResetGlobals(),ControlSend2(,"{space}","ahk_exe Google Play Music Desktop Player.exe")
 #if WinActive("Heroes of the Storm")
-LWin::LAlt
+#Include HotS.ahk
 #if WinActive("Vermintide 2")
-XButton2::q
+#Include Vermintide.ahk
 #if (bDebug = true)
 F1::
 	MsgBox2(NarrateActiveWindow(),true)
@@ -127,7 +127,7 @@ F2::
 	MsgBox2(IsDefaultContext())
 	return
 F3::
-	ControlSend2("Intermediate D3D Window1","{z down}","ahk_exe Discord.exe")
+	MsgBox2(A_WorkingDir)
 	return
 F4::
 	ControlSend2(,"b","ahk_exe Discord.exe")
