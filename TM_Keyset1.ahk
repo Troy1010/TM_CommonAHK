@@ -97,7 +97,7 @@ LButton::ResetGlobals(),SnapWindowBotLeft()
 RButton::ResetGlobals(),SnapWindowFullscreen()
 XButton1::
 	Run, "C:\TMinus1010_Local\Coding"
-	sleep 100
+	sleep 200
 	SnapWindowBotLeft()
 	ResetGlobals()
 	return
