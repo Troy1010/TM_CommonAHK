@@ -49,13 +49,14 @@ ResetGlobals() {
 	iScrollCount := 0
 }
 IsDefaultContext() {
-	return !WinActive("Heroes")
+	return !WinActive("Heroes of the Storm") and !WinActive("Vermintide 2")
 }
 WaiterXB2:
 	ResetGlobals()
 	SoundPlay, C:\TMinus1010\Media\Sounds\26777__junggle__btn402.wav
 	return
 ;-------Keyset
+;-AllContexts
 MButton::WinTab()
 XButton1::F18
 #if IsDefaultContext()
@@ -114,14 +115,14 @@ LButton::ResetGlobals(),SnapWindowUpLeft()
 #if IsDefaultContext() and (iXB2Count == 4)
 RButton::EasyResetMode(),CloseChromeWindow()
 XButton1::ResetGlobals(),ControlSend2(,"{space}","ahk_exe Google Play Music Desktop Player.exe")
-#if WinActive("Heroes")
+#if WinActive("Heroes of the Storm")
 LWin::LAlt
-#if IsDefaultContext() and (bDebug = true)
+#if (bDebug = true)
 F1::
 	MsgBox2(NarrateActiveWindow(),true)
 	return
 F2::
-	ControlSend2("Chrome_RenderWidgetHostHWND1","{z down}","ahk_exe Discord.exe")
+	MsgBox2(IsDefaultContext())
 	return
 F3::
 	ControlSend2("Intermediate D3D Window1","{z down}","ahk_exe Discord.exe")

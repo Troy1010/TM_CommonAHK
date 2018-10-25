@@ -100,14 +100,17 @@ WinTab() {
 }
 
 ;Concatenation operator is .
+;Buggy if using multiple desktops
 NarrateActiveWindow() {
 	sReturning := ""
-	WinGet, sTitle, ProcessName, A
-	sReturning .= "Title:" sTitle
+	WinGet, sProcessName, ProcessName, A
+	sReturning .= "ProcessName:" sProcessName
 	WinGet, vID, ID, A
 	sReturning .= "`nID:" vID
 	WinGet, cControlList, ControlList, A
 	sReturning .= "`nControlList:" Narrate(cControlList)
+	WinGetTitle,sTitle,A
+	sReturning .= "`nTitle:" Narrate(sTitle)
 	return sReturning
 }
 
@@ -145,6 +148,7 @@ Tooltip2(s,iTimer=2500) {
 	SetTimer, __WaiterTooltip, %iTimer%
 }
 
+;bCopyable: Set to true if you want to be able to copy from the MsgBox
 MsgBox2(s,bCopyable:=false) {
 	if (!bCopyable)
 	{
