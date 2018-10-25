@@ -56,10 +56,9 @@ WaiterXB2:
 	SoundPlay, C:\TMinus1010\Media\Sounds\26777__junggle__btn402.wav
 	return
 ;-------Keyset
-;-AllContexts
+#if IsDefaultContext()
 MButton::WinTab()
 XButton1::F18
-#if IsDefaultContext()
 XButton2::
 	if (bEasyResetMode)
 	{
