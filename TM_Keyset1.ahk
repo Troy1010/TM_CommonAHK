@@ -117,6 +117,8 @@ RButton::EasyResetMode(),CloseChromeWindow()
 XButton1::ResetGlobals(),ControlSend2(,"{space}","ahk_exe Google Play Music Desktop Player.exe")
 #if WinActive("Heroes of the Storm")
 LWin::LAlt
+#if WinActive("Vermintide 2")
+XButton2::q
 #if (bDebug = true)
 F1::
 	MsgBox2(NarrateActiveWindow(),true)
