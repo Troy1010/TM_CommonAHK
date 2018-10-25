@@ -79,7 +79,7 @@ LButton::ResetGlobals(),SnapWindowLeft()
 RButton::ResetGlobals(),SnapWindowRight()
 XButton1::
 	Run, "C:\TMinus1010"
-	sleep 100
+	sleep 200
 	SnapWindowBotLeft()
 	ResetGlobals()
 	return
