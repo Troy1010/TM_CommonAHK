@@ -4,26 +4,7 @@ Process, Priority, , H
 ;-------Globals
 iXB2Count := 0
 bEasyResetMode := false
-iScrollCount := 0
-;-------
-Loop
-{
-	if (iScrollCount > 0) {
-		if (GetKeyState("WheelUp","P") != 0)
-		{
-			iScrollCount -= 1
-			SendInput {Click WheelUp}
-		}
-	}
-	else if (iScrollCount < 0) {
-		if (GetKeyState("WheelDown","P") != 0)
-		{
-			iScrollCount += 1
-			SendInput {Click WheelDown} ;These probably don't need to be looped.
-		}
-	}
-	sleep 2
-}
+bScrollFast := false
 ;-------End Init
 return
 ;-------Safety Exit
@@ -41,19 +22,26 @@ EasyResetMode() {
 	bEasyResetMode := true
 }
 ResetGlobals() {
-	global iScrollCount
 	global bEasyResetMode
 	global iXB2Count
+	global bScrollFast
 	bEasyResetMode := false
 	iXB2Count := 0
-	iScrollCount := 0
+	bScrollFast := false
+	SetTimer, WaiterScroll_XB1Context, off
+	SetTimer, WaiterXB2, off
 }
 IsDefaultContext() {
 	return !WinActive("Heroes of the Storm") and !WinActive("Vermintide 2")
 }
+WaiterScroll_XB1Context:
+	bScrollFast := false
+	SetTimer, WaiterScroll_XB1Context, off
+	return
 WaiterXB2:
 	ResetGlobals()
 	SoundPlay, C:\TMinus1010\Media\Sounds\26777__junggle__btn402.wav
+	SetTimer, WaiterXB2, off
 	return
 ;-------Keyset
 #if IsDefaultContext()
@@ -84,13 +72,29 @@ XButton1::
 	return
 WheelUp::
 	EasyResetMode()
-	SetKeyDelay, 10
-	iScrollCount += 10
+	if (bScrollFast)
+	{
+		SendInput {Click WheelUp 10}
+	}
+	else
+	{
+		SendInput {Click WheelUp}
+		bScrollFast := true
+	}
+	SetTimer, WaiterScroll_XB1Context, 500
 	return
 WheelDown::
 	EasyResetMode()
-	SetKeyDelay, 10
-	iScrollCount -= 10
+	if (bScrollFast)
+	{
+		SendInput {Click WheelDown 10}
+	}
+	else
+	{
+		SendInput {Click WheelDown}
+		bScrollFast := true
+	}
+	SetTimer, WaiterScroll_XB1Context, 500
 	return
 #if IsDefaultContext() and (iXB2Count == 2)
 LButton::ResetGlobals(),SnapWindowBotLeft()
