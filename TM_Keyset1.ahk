@@ -5,6 +5,38 @@ Process, Priority, , H
 iXB2Count := 0
 bEasyResetMode := false
 bScrollFast := false
+iScrollCount := 0
+;-------Loop
+Loop
+{
+	if (iScrollCount > 0) {
+		if (GetKeyState("WheelUp","P") != 0) ;is this necessary with SendInput?
+		{
+			if (iScrollCount > 30) {
+				iScrollCount -= 3
+				SendInput {Click WheelUp 3}
+			}
+			else {
+				iScrollCount -= 1
+				SendInput {Click WheelUp}
+			}
+		}
+	}
+	else if (iScrollCount < 0) {
+		if (GetKeyState("WheelDown","P") != 0)
+		{
+			if (iScrollCount < -30) {
+				iScrollCount += 3
+				SendInput {Click WheelDown 3}
+			}
+			else {
+				iScrollCount += 1
+				SendInput {Click WheelDown}
+			}
+		}
+	}
+	sleep 2
+}
 ;-------End Init
 return
 ;-------Safety Exit
@@ -25,9 +57,11 @@ ResetGlobals() {
 	global bEasyResetMode
 	global iXB2Count
 	global bScrollFast
+	global iScrollCount
 	bEasyResetMode := false
 	iXB2Count := 0
 	bScrollFast := false
+	iScrollCount := 0
 	SetTimer, WaiterScroll_XB1Context, off
 	SetTimer, WaiterXB2, off
 }
@@ -74,7 +108,7 @@ WheelUp::
 	EasyResetMode()
 	if (bScrollFast)
 	{
-		SendInput {Click WheelUp 10}
+		iScrollCount += 15
 	}
 	else
 	{
@@ -87,7 +121,7 @@ WheelDown::
 	EasyResetMode()
 	if (bScrollFast)
 	{
-		SendInput {Click WheelDown 10}
+		iScrollCount -= 15
 	}
 	else
 	{
