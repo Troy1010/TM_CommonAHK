@@ -4,7 +4,7 @@ Process, Priority, , H
 ;-------Globals
 iXB2Count := 0
 bEasyResetMode := false
-bScrollFast := false
+eScrollFast := 0
 iScrollCount := 0
 ;-------Loop
 Loop
@@ -56,11 +56,11 @@ EasyResetMode() {
 ResetGlobals() {
 	global bEasyResetMode
 	global iXB2Count
-	global bScrollFast
+	global eScrollFast
 	global iScrollCount
 	bEasyResetMode := false
 	iXB2Count := 0
-	bScrollFast := false
+	eScrollFast := 0
 	iScrollCount := 0
 	SetTimer, WaiterScroll_XB1Context, off
 	SetTimer, WaiterXB2, off
@@ -69,7 +69,7 @@ IsDefaultContext() {
 	return !WinActive("Heroes of the Storm") and !WinActive("Vermintide 2")
 }
 WaiterScroll_XB1Context:
-	bScrollFast := false
+	eScrollFast := 0
 	SetTimer, WaiterScroll_XB1Context, off
 	return
 WaiterXB2:
@@ -106,27 +106,29 @@ XButton1::
 	return
 WheelUp::
 	EasyResetMode()
-	if (bScrollFast)
-	{
-		iScrollCount += 15
+	if (eScrollFast < 3) {		;here, SendInput {Click WheelUp} is not reliable
+		eScrollFast += 1
+		iScrollCount += 2
+		if (eScrollFast == 3) {
+			iScrollCount += 26
+		}
 	}
-	else
-	{
-		SendInput {Click WheelUp}
-		bScrollFast := true
+	else {
+		iScrollCount += 15
 	}
 	SetTimer, WaiterScroll_XB1Context, 500
 	return
 WheelDown::
 	EasyResetMode()
-	if (bScrollFast)
-	{
-		iScrollCount -= 15
+	if (eScrollFast < 3) {
+		eScrollFast += 1
+		iScrollCount -= 2
+		if (eScrollFast == 3) {
+			iScrollCount -= 26
+		}
 	}
-	else
-	{
-		SendInput {Click WheelDown}
-		bScrollFast := true
+	else {
+		iScrollCount -= 15
 	}
 	SetTimer, WaiterScroll_XB1Context, 500
 	return
