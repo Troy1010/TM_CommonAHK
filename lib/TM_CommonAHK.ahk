@@ -25,6 +25,18 @@ __WaiterTooltip:
 	return
 ;-------Public
 
+;1000ms to 1sec
+GetTimePassed(ByRef fTimestamp) {
+	if (fTimestamp == 0) {
+		fReturning := 0
+	}
+	else {
+		fReturning := A_TickCount - fTimestamp
+	}
+	fTimestamp := A_TickCount
+	return fReturning
+}
+
 CloseMouseoverWindow() {
 	MouseGetPos,,, vMouseoverWin
 	if (vMouseoverWin == 0x1012e) ;Desktop

@@ -4,11 +4,16 @@ Process, Priority, , H
 ;-------Globals
 iXB2Count := 0
 bEasyResetMode := false
-eScrollFast := 0
+fScrollFastTimer := 0
 iScrollCount := 0
+bScrollingFast := false
+fTimestamp := 0
 ;-------Loop
 Loop
 {
+	if (fScrollFastTimer > 0 and !bScrollingFast) {
+		fScrollFastTimer := Max(0,fScrollFastTimer - GetTimePassed(fTimestamp))
+	}
 	if (iScrollCount > 0) {
 		if (GetKeyState("WheelUp","P") != 0) ;is this necessary with SendInput?
 		{
@@ -56,12 +61,14 @@ EasyResetMode() {
 ResetGlobals() {
 	global bEasyResetMode
 	global iXB2Count
-	global eScrollFast
+	global fScrollFastTimer
 	global iScrollCount
+	global bScrollingFast
 	bEasyResetMode := false
 	iXB2Count := 0
-	eScrollFast := 0
+	fScrollFastTimer := 0
 	iScrollCount := 0
+	bScrollingFast := false
 	SetTimer, WaiterScroll_XB1Context, off
 	SetTimer, WaiterXB2, off
 }
@@ -69,7 +76,8 @@ IsDefaultContext() {
 	return !WinActive("Heroes of the Storm") and !WinActive("Vermintide 2")
 }
 WaiterScroll_XB1Context:
-	eScrollFast := 0
+	fScrollFastTimer := 0
+	bScrollingFast := false
 	SetTimer, WaiterScroll_XB1Context, off
 	return
 WaiterXB2:
@@ -106,29 +114,39 @@ XButton1::
 	return
 WheelUp::
 	EasyResetMode()
-	if (eScrollFast < 3) {		;here, SendInput {Click WheelUp} is not reliable
-		eScrollFast += 1
-		iScrollCount += 2
-		if (eScrollFast == 3) {
+	if (!bScrollingFast) {				
+		if (fScrollFastTimer < 525) {	;x = z/r
+			fScrollFastTimer += 477		;y = z/((z-1)*r)
+		}								;z:scrolls required		2.1scrolls required
+		else {							;r:scrolls/sec			4scrolls/s
 			iScrollCount += 26
+			bScrollingFast := true
 		}
 	}
-	else {
+	if (bScrollingFast) {
 		iScrollCount += 15
+	}
+	else {
+		iScrollCount += 2
 	}
 	SetTimer, WaiterScroll_XB1Context, 500
 	return
 WheelDown::
 	EasyResetMode()
-	if (eScrollFast < 3) {
-		eScrollFast += 1
-		iScrollCount -= 2
-		if (eScrollFast == 3) {
+	if (!bScrollingFast) {
+		if (fScrollFastTimer < 525) {
+			fScrollFastTimer += 477
+		}
+		else {
 			iScrollCount -= 26
+			bScrollingFast := true
 		}
 	}
-	else {
+	if (bScrollingFast) {
 		iScrollCount -= 15
+	}
+	else {
+		iScrollCount -= 2
 	}
 	SetTimer, WaiterScroll_XB1Context, 500
 	return
