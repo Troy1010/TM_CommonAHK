@@ -96,18 +96,12 @@ SnapWindowRight() {
 	return
 }
 
-ExpandWindowLeft(iAmount:=40) {
+ExpandWindowLeft() {
 	BlockInput MouseMove
-	Send {alt down}
-	Send {space down}
-	Send {s}
-	Send {alt up}
-	Send {space up}
-	Send {Left} ;The first time left is sent the action is just primed.
-	for _ in range(iAmount) {
-		Send {Left}
-	}
-	Send {Enter}
+	WinGetPos,X,Y,W,H,A
+	fXAdjustment := W*0.6
+	W += fXAdjustment
+	WinMove A,,X-fXAdjustment,Y,W,H
 	BlockInput MouseMoveOff
 }
 

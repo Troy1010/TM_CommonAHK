@@ -104,8 +104,8 @@ XButton2 Up::
 	SetTimer, WaiterXB2, off
 	return
 #if IsDefaultContext() and (iXB2Count == 1)
-LButton::ResetGlobals(),SnapWindowLeft()
-RButton::ResetGlobals(),SnapWindowRight(),ExpandWindowLeft(65)
+LButton::ResetGlobals(),SnapWindowBotLeft()
+RButton::ResetGlobals(),SnapWindowRight(),ExpandWindowLeft()
 XButton1::
 	Run, "C:\TMinus1010"
 	sleep 200
@@ -151,7 +151,7 @@ WheelDown::
 	SetTimer, WaiterScroll_XB1Context, 500
 	return
 #if IsDefaultContext() and (iXB2Count == 2)
-LButton::ResetGlobals(),SnapWindowBotLeft()
+LButton::ResetGlobals(),SnapWindowLeft()
 RButton::ResetGlobals(),SnapWindowRight()
 XButton1::
 	Run, "C:\TMinus1010_Local\Coding"
