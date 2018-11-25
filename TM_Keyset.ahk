@@ -105,7 +105,7 @@ XButton2 Up::
 	return
 #if IsDefaultContext() and (iXB2Count == 1)
 LButton::ResetGlobals(),SnapWindowLeft()
-RButton::ResetGlobals(),SnapWindowRight()
+RButton::ResetGlobals(),SnapWindowRight(),ExpandWindowLeft(65)
 XButton1::
 	Run, "C:\TMinus1010"
 	sleep 200
@@ -152,7 +152,7 @@ WheelDown::
 	return
 #if IsDefaultContext() and (iXB2Count == 2)
 LButton::ResetGlobals(),SnapWindowBotLeft()
-RButton::ResetGlobals(),SnapWindowFullscreen()
+RButton::ResetGlobals(),SnapWindowRight()
 XButton1::
 	Run, "C:\TMinus1010_Local\Coding"
 	sleep 200
@@ -162,13 +162,14 @@ XButton1::
 WheelUp::EasyResetMode(),MinimizeMouseoverWindow()
 WheelDown::EasyResetMode(),CloseMouseoverWindow()
 #if IsDefaultContext() and (iXB2Count == 3)
+LButton::ResetGlobals(),SnapWindowUpLeft()
+RButton::ResetGlobals(),SnapWindowFullscreen()
 XButton1::
 	OpenCmdAtActiveWindow()
 	sleep 100
 	SnapWindowUpLeft()
 	ResetGlobals()
 	return
-LButton::ResetGlobals(),SnapWindowUpLeft()
 #if IsDefaultContext() and (iXB2Count == 4)
 RButton::EasyResetMode(),CloseChromeWindow()
 XButton1::ResetGlobals(),ControlSend2(,"{space}","ahk_exe Google Play Music Desktop Player.exe")

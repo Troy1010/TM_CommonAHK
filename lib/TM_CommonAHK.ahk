@@ -1,3 +1,5 @@
+;-------Dependencies
+#include <CopyPasta>
 ;-------Pretend Private
 __UnsnapIfNecessary() {
 	bUnsnap = false
@@ -92,6 +94,21 @@ SnapWindowRight() {
 	Send {Right}
 	Send {LWin Up}
 	return
+}
+
+ExpandWindowLeft(iAmount:=40) {
+	BlockInput MouseMove
+	Send {alt down}
+	Send {space down}
+	Send {s}
+	Send {alt up}
+	Send {space up}
+	Send {Left} ;The first time left is sent the action is just primed.
+	for _ in range(iAmount) {
+		Send {Left}
+	}
+	Send {Enter}
+	BlockInput MouseMoveOff
 }
 
 SnapWindowFullscreen() {
