@@ -99,7 +99,7 @@ SnapWindowRight() {
 ExpandWindowLeft() {
 	BlockInput MouseMove
 	WinGetPos,X,Y,W,H,A
-	fXAdjustment := W*0.6
+	fXAdjustment := W*0.5
 	W += fXAdjustment
 	WinMove A,,X-fXAdjustment,Y,W,H
 	BlockInput MouseMoveOff
