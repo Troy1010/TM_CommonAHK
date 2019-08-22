@@ -13,6 +13,7 @@ __UnsnapIfNecessary() {
 		Send {Up}
 		Send {Up}
 		Send {Up} ;4th one should be unnecessary
+		Send {Down}
 		Send {LWin Up}
 	}
 }
