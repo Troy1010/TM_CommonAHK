@@ -73,7 +73,7 @@ ResetGlobals() {
 	SetTimer, WaiterXB2, off
 }
 IsDefaultContext() {
-	return !WinActive("Heroes of the Storm") and !WinActive("Vermintide 2")
+	return !WinActive("Heroes of the Storm") and !WinActive("Vermintide 2") and !WinActive("Path")
 }
 WaiterScroll_XB1Context:
 	fScrollFastTimer := 0
@@ -177,6 +177,8 @@ XButton1::ResetGlobals(),ControlSend2(,"{space}","ahk_exe Google Play Music Desk
 #Include HotS.ahk
 #if WinActive("Vermintide 2")
 #Include Vermintide.ahk
+#if WinActive("Path")
+#Include PoE.ahk
 #if (bDebug = true)
 F1::
 	MsgBox2(NarrateActiveWindow(),true)
