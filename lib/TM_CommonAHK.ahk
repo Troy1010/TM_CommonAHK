@@ -15,6 +15,7 @@ __UnsnapIfNecessary() {
         Send {Up} ;4th one should be unnecessary
         Send {Down}
         Send {LWin Up}
+        sleep, 25 ;This wasn't always necessary
     }
 }
 __GetActiveWinPos() {
