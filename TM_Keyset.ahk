@@ -1,6 +1,8 @@
 ;-------Settings
-bDebug := false
+bDebug := true
 Process, Priority, , H
+;
+init_TM_CommonAHK()
 ;-------Globals
 iXB2Count := 0
 bEasyResetMode := false
@@ -48,12 +50,10 @@ return
 ^Escape::ExitApp
 ;-------Imports
 #include <TM_CommonAHK>
-;-------Helper Functions, Labels
-;Convenience for writing single-line.
+;-------Helper Functions
 CloseChromeWindow() {
 	Send {ctrl down}w{ctrl up}
 }
-;Convenience for writing single-line.
 EasyResetMode() {
 	global bEasyResetMode
 	bEasyResetMode := true
@@ -73,8 +73,15 @@ ResetGlobals() {
 	SetTimer, WaiterXB2, off
 }
 IsDefaultContext() {
-	return !WinActive("Heroes of the Storm") and !WinActive("Vermintide 2") and !WinActive("Path")
+	return !WinActive("Heroes of the Storm") and !WinActive("Vermintide 2") and !WinActive("Path") and !WinActive("Factorio")
 }
+OpenFolderAndMoveToSection(path, sectionEnumIndex) {
+	Run, Explorer %path%
+	WinGet, vIgnorablePID, PID, A
+	WaitUntilWinTextActive(path, vIgnorablePID)
+	MoveAWinToSection(sectionEnumIndex)
+}
+;-------Labels
 WaiterScroll_XB1Context:
 	fScrollFastTimer := 0
 	bScrollingFast := false
@@ -82,7 +89,7 @@ WaiterScroll_XB1Context:
 	return
 WaiterXB2:
 	ResetGlobals()
-	SoundPlay, C:\TMinus1010\Media\Sounds\26777__junggle__btn402.wav
+	SoundPlay, C:\TMinus1010\Media\Sounds\26777__junggle__btn402_edited_quiet.wav
 	SetTimer, WaiterXB2, off
 	return
 ;-------Keyset
@@ -104,12 +111,10 @@ XButton2 Up::
 	SetTimer, WaiterXB2, off
 	return
 #if IsDefaultContext() and (iXB2Count == 1)
-LButton::ResetGlobals(),SnapWindowBotLeft()
-RButton::ResetGlobals(),SnapWindowRight(),ExpandWindowLeft()
+LButton::ResetGlobals(),MoveAWinToSection(enum_ScreenSection.BotLeft)
+RButton::ResetGlobals(),MoveAWinToSection(enum_ScreenSection.BigRight)
 XButton1::
-	Run, "C:\TMinus1010"
-	sleep 200
-	SnapWindowBotLeft()
+	OpenFolderAndMoveToSection("C:\TMinus1010", enum_ScreenSection.BotLeft)
 	ResetGlobals()
 	return
 WheelUp::
@@ -151,24 +156,34 @@ WheelDown::
 	SetTimer, WaiterScroll_XB1Context, 500
 	return
 #if IsDefaultContext() and (iXB2Count == 2)
-LButton::ResetGlobals(),SnapWindowLeft()
-RButton::ResetGlobals(),SnapWindowRight()
-XButton1::
-	Run, "C:\TMinus1010_Local\Coding"
-	sleep 200
-	SnapWindowBotLeft()
+LButton::
 	ResetGlobals()
+	if (GetKeyState("XButton2","P") and GetKeyState("XButton1","P")) {
+		SetTimer, WaiterXB2, off
+		OpenFolderAndMoveToSection("C:\TMinus1010\Projects\Career\Apolis", enum_ScreenSection.BotLeft)
+	} else {
+		MoveAWinToSection(enum_ScreenSection.Left)
+	}
+	return
+RButton::ResetGlobals(),MoveAWinToSection(enum_ScreenSection.Right)
+XButton1 Up::
+	ResetGlobals()
+	if (!GetKeyState("XButton2","P")) {
+		OpenFolderAndMoveToSection("C:\TMinus1010_Local\Coding", enum_ScreenSection.BotLeft)
+	} else {
+		OpenFolderAndMoveToSection("C:\Users\Troy\AndroidStudioProjects", enum_ScreenSection.BotLeft)
+	}
 	return
 WheelUp::EasyResetMode(),MinimizeMouseoverWindow()
 WheelDown::EasyResetMode(),CloseMouseoverWindow()
 #if IsDefaultContext() and (iXB2Count == 3)
-LButton::ResetGlobals(),SnapWindowUpLeft()
-RButton::ResetGlobals(),SnapWindowFullscreen()
-XButton1::
-	OpenCmdAtActiveWindow()
-	sleep 100
-	SnapWindowUpLeft()
+LButton::ResetGlobals(),MoveAWinToSection(enum_ScreenSection.TopLeft)
+RButton::ResetGlobals(),MoveAWinToSection(enum_ScreenSection.Fullscreen)
+XButton1 Up::
 	ResetGlobals()
+	OpenCmdAtActiveWindow()
+	WinWaitActive,ahk_exe cmd.exe,,5
+	MoveAWinToSection(enum_ScreenSection.TopLeft)
 	return
 #if IsDefaultContext() and (iXB2Count == 4)
 RButton::EasyResetMode(),CloseChromeWindow()
@@ -179,22 +194,53 @@ XButton1::ResetGlobals(),ControlSend2(,"{space}","ahk_exe Google Play Music Desk
 #Include Vermintide.ahk
 #if WinActive("Path")
 #Include PoE.ahk
+#if WinActive("Factorio")
+#Include Factorio.ahk
+#if true
+#Include SkypeMute.ahk
 #if (bDebug = true)
 F1::
-	MsgBox2(NarrateActiveWindow(),true)
+	FormatTime, MyTime,, hh:mm:ss tt
+	Log(MyTime)
 	return
 F2::
-	MsgBox2(IsDefaultContext())
+	MsgBox2(pert)
 	return
 F3::
-	MsgBox2(A_WorkingDir)
+	Run, Explorer "C:\Users\Troy\AndroidStudioProjects"
+	bFoundIt := false
+	While (!bFoundIt) {
+		sleep, 1
+		WinGetText, vText, A
+		bFoundIt := InStr(vText, "C:\Users\Troy\AndroidStudioProjects")
+	}
+	SoundPlay, C:\TMinus1010\Media\Sounds\26777__junggle__btn402_edited_quiet.wav
+	MoveAWinToSection(enum_ScreenSection.BotLeft)
+	MsgBox2(vText)
 	return
 F4::
-	ControlSend2(,"b","ahk_exe Discord.exe")
+	SetTitleMatchMode, 2
+	Run, Explorer "C:\Users\Troy\AndroidStudioProjects",,,vPID
+	; WinWaitActive, ahk_pid vPID,,2
+	; sleep 500
+	; WinGetText, vText, A
+	; bFoundIt := InStr(vText, "C:\Users\Troy\AndroidStudioProjects")
+	; MsgBox2(bFoundIt)
+	WinWaitActive,,"C:\Users\Troy\AndroidStudioProjects",5
+	MsgBox2("z")
+	; MoveAWinToSection(enum_ScreenSection.BotLeft)
 	return
 F5::
-    SetTitleMatchMode, 2
-    ControlSend, ahk_exe Discord.exe, yo{enter}
+	return
 F6::
+	vWinTitle:="ahk_exe Skype.exe"
+    ControlFocus,, %vWinTitle%
+    ControlSend,, ^m, %vWinTitle%
+	return
+F7::
+	ControlSend2(,"b","ahk_exe Discord.exe")
+	return
+F8::
 	MsgBox2(NarrateActiveWindow(),true)
+	return
 	
