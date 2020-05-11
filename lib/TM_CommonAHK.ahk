@@ -4,7 +4,7 @@ init_TM_CommonAHK() {
 	global enum_ScreenSection := Object("Left", 0, "Right", 1, "BotLeft", 2, "BotRight", 3, "TopRight", 4, "TopLeft", 5, "Fullscreen", 6, "BigRight", 7)
     FileDelete, %A_WorkingDir%\TMLog.txt
 	FormatTime, tempTime,, hh:mm:ss tt
-    FileAppend, #TMLog %tempTime%, %A_WorkingDir%\TMLog.txt
+    Log("#TMLog " tempTime)
 }
 ;-------Dependencies
 #include <CopyPasta>
@@ -32,11 +32,11 @@ GetTimePassed(ByRef fTimestamp) {
     return fReturning
 }
 
-WaitUntilWinTextActive(sText, vIgnorablePID:=0) {
+WaitUntilWinTextActive(sText, vIgnorablePID:=0, vTimeoutDuration=3000) {
     fTimestamp := A_TickCount
     WinGetText, tempText, A
     WinGet, tempPID, PID, A
-	While (((A_TickCount - fTimestamp)<3000) and (!InStr(tempText, sText) or (vIgnorablePID and (vIgnorablePID == tempPID))) ) {
+	While (((A_TickCount - fTimestamp)<vTimeoutDuration) and (!InStr(tempText, sText) or (vIgnorablePID and (vIgnorablePID == tempPID))) ) {
 		sleep, 1
 		WinGetText, tempText, A
         WinGet, tempPID, PID, A
@@ -45,25 +45,22 @@ WaitUntilWinTextActive(sText, vIgnorablePID:=0) {
 
 CloseMouseoverWindow() {
     MouseGetPos,,, vMouseoverWin
-    if (vMouseoverWin == 0x1012e) ;Desktop
+    if (!IsDesktop("ahk_id "+vMouseoverWin))
     {
-        return
+        WinClose, ahk_id %vMouseoverWin%
     }
-    WinClose, ahk_id %vMouseoverWin%
 }
 
 MinimizeMouseoverWindow() {
     MouseGetPos,,, vMouseoverWin
-    if (vMouseoverWin == 0x1012e) ;Desktop
+    if (!IsDesktop("ahk_id "+vMouseoverWin))
     {
-        return
+        WinMinimize, ahk_id %vMouseoverWin%
     }
-    WinMinimize, ahk_id %vMouseoverWin%
 }
 
 CloseActiveWindow() {
     WinClose, A
-    return
 }
 
 SnapAWinToSection(eSection) {
@@ -116,7 +113,7 @@ SnapAWinToSection(eSection) {
             Send {LWin Down}
             Send {Right}
             Send {LWin Up}
-            ExpandWindowLeft(0.6)
+            ResizeWindowLeft(0.5)
     }
     return
 }
@@ -165,33 +162,54 @@ MoveAWinToSection(eSection) {
     return
 }
 
-ExpandWindowLeft(multiplier) {
+ResizeWindowLeft(multiplier) {
     BlockInput MouseMove
     WinGetPos,X,Y,W,H,A
     fXAdjustment := W*multiplier
     W += fXAdjustment
     WinMove A,,X-fXAdjustment,Y,W,H
     BlockInput MouseMoveOff
+    return
+}
+
+ResizeWindowRight(multiplier) {
+    BlockInput MouseMove
+    WinGetPos,X,Y,W,H,A
+    WinMove A,,X,Y,W*multiplier,H
+    BlockInput MouseMoveOff
+    return
 }
 
 WinTab() {
     Send {LWin Down}
     Send {Tab}
     Send {LWin Up}
-return
+    return
 }
 
-;Concatenation operator is .
+IsDesktop(vWinTitle) {
+    WinGet, sProcessName, ProcessName, %vWinTitle%
+    StringUpper, sProcessName, sProcessName
+    WinGetTitle, sTitle, %vWinTitle%
+    return "EXPLORER.EXE" == sProcessName and sTitle == ""
+}
+
 ;Buggy if using multiple desktops
 NarrateActiveWindow() {
+    return NarrateWindow("A")
+}
+
+;Example: NarrateWindow("ahk_id "+vMouseoverWin)
+;Concatenation operator is .
+NarrateWindow(vWinTitle) {
     sReturning := ""
-    WinGet, sProcessName, ProcessName, A
+    WinGet, sProcessName, ProcessName, %vWinTitle%
     sReturning .= "ProcessName:" sProcessName
-    WinGet, vID, ID, A
+    WinGet, vID, ID, %vWinTitle%
     sReturning .= "`nID:" vID
-    WinGet, cControlList, ControlList, A
+    WinGet, cControlList, ControlList, %vWinTitle%
     sReturning .= "`nControlList:" Narrate(cControlList)
-    WinGetTitle,sTitle,A
+    WinGetTitle, sTitle, %vWinTitle%
     sReturning .= "`nTitle:" Narrate(sTitle)
     return sReturning
 }
@@ -222,7 +240,7 @@ BeepIf(bBool) {
     {
         SoundPlay, *-1
     }
-return
+    return
 }
 
 Tooltip2(s,iTimer=2500) {
@@ -249,11 +267,11 @@ GetActiveExplorerWinDir() {
     RegExMatch(sText,"Address: \K\V+",sDir)
     if (!IsDir(sDir))
         sDir = 
-return sDir
+    return sDir
 }
 
 IsDir(s) {
-return InStr( FileExist(s), "D")
+    return InStr( FileExist(s), "D")
 }
 
 OpenCmdAtActiveWindow() {

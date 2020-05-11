@@ -89,7 +89,7 @@ WaiterScroll_XB1Context:
 	return
 WaiterXB2:
 	ResetGlobals()
-	SoundPlay, C:\TMinus1010\Media\Sounds\26777__junggle__btn402_edited_quiet.wav
+	SoundPlay, res\26777__junggle__btn402_edited_quiet.wav
 	SetTimer, WaiterXB2, off
 	return
 ;-------Keyset
@@ -112,10 +112,14 @@ XButton2 Up::
 	return
 #if IsDefaultContext() and (iXB2Count == 1)
 LButton::ResetGlobals(),MoveAWinToSection(enum_ScreenSection.BotLeft)
-RButton::ResetGlobals(),MoveAWinToSection(enum_ScreenSection.BigRight)
-XButton1::
-	OpenFolderAndMoveToSection("C:\TMinus1010", enum_ScreenSection.BotLeft)
+RButton::ResetGlobals(),SnapAWinToSection(enum_ScreenSection.BigRight)
+XButton1 Up::
 	ResetGlobals()
+	if (!GetKeyState("XButton2","P")) {
+		OpenFolderAndMoveToSection("C:\Dropbox", enum_ScreenSection.BotLeft)
+	} else {
+		;TODO: either open text_stream or TaskList
+	}
 	return
 WheelUp::
 	EasyResetMode()
@@ -160,7 +164,7 @@ LButton::
 	ResetGlobals()
 	if (GetKeyState("XButton2","P") and GetKeyState("XButton1","P")) {
 		SetTimer, WaiterXB2, off
-		OpenFolderAndMoveToSection("C:\TMinus1010\Projects\Career\Apolis", enum_ScreenSection.BotLeft)
+		OpenFolderAndMoveToSection("C:\Dropbox\Projects\Career\Apolis", enum_ScreenSection.BotLeft)
 	} else {
 		MoveAWinToSection(enum_ScreenSection.Left)
 	}
@@ -169,7 +173,7 @@ RButton::ResetGlobals(),MoveAWinToSection(enum_ScreenSection.Right)
 XButton1 Up::
 	ResetGlobals()
 	if (!GetKeyState("XButton2","P")) {
-		OpenFolderAndMoveToSection("C:\TMinus1010_Local\Coding", enum_ScreenSection.BotLeft)
+		OpenFolderAndMoveToSection("C:\Dropbox\Projects\Coding", enum_ScreenSection.BotLeft)
 	} else {
 		OpenFolderAndMoveToSection("C:\Users\Troy\AndroidStudioProjects", enum_ScreenSection.BotLeft)
 	}
@@ -200,35 +204,18 @@ XButton1::ResetGlobals(),ControlSend2(,"{space}","ahk_exe Google Play Music Desk
 #Include SkypeMute.ahk
 #if (bDebug = true)
 F1::
-	FormatTime, MyTime,, hh:mm:ss tt
-	Log(MyTime)
+	MsgBox2(NarrateWindow("A"))
 	return
 F2::
-	MsgBox2(pert)
+	MsgBox2(NarrateActiveWindow())
 	return
 F3::
-	Run, Explorer "C:\Users\Troy\AndroidStudioProjects"
-	bFoundIt := false
-	While (!bFoundIt) {
-		sleep, 1
-		WinGetText, vText, A
-		bFoundIt := InStr(vText, "C:\Users\Troy\AndroidStudioProjects")
-	}
-	SoundPlay, C:\TMinus1010\Media\Sounds\26777__junggle__btn402_edited_quiet.wav
-	MoveAWinToSection(enum_ScreenSection.BotLeft)
-	MsgBox2(vText)
+    MouseGetPos,,, vMouseoverWin
+	MsgBox2(NarrateWindow("ahk_id "+vMouseoverWin), true)
 	return
 F4::
-	SetTitleMatchMode, 2
-	Run, Explorer "C:\Users\Troy\AndroidStudioProjects",,,vPID
-	; WinWaitActive, ahk_pid vPID,,2
-	; sleep 500
-	; WinGetText, vText, A
-	; bFoundIt := InStr(vText, "C:\Users\Troy\AndroidStudioProjects")
-	; MsgBox2(bFoundIt)
-	WinWaitActive,,"C:\Users\Troy\AndroidStudioProjects",5
-	MsgBox2("z")
-	; MoveAWinToSection(enum_ScreenSection.BotLeft)
+    MouseGetPos,,, vMouseoverWin
+	MsgBox2(IsDesktop("ahk_id "+vMouseoverWin))
 	return
 F5::
 	return
