@@ -1,5 +1,5 @@
 ;-------Settings
-bDebug := true
+bDebug := false
 Process, Priority, , H
 ;
 init_TM_CommonAHK()

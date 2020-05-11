@@ -113,7 +113,7 @@ SnapAWinToSection(eSection) {
             Send {LWin Down}
             Send {Right}
             Send {LWin Up}
-            ResizeWindowLeft(0.5)
+            MoveAWinToSection(enum_ScreenSection.BigRight)
     }
     return
 }
@@ -128,12 +128,12 @@ MoveAWinToSection(eSection) {
     posXMid := 953
     posYTop := 0
     posYMid := 525
-    posXBigRight := 466
     WidthHalfway := 974
     WidthFullway := 1926
-    WidthBigRight := 1461
     HeightHalfway := 532
     HeightFullway := 1056
+    posXBigRight := 466
+    WidthBigRight := 1461
     ;For some reason, if window is snapped to fullscreen, it will not automatically unsnap
     WinGetPos,posX,posY,,,A
     if ((posX = -8) and (posY = -8)) {
@@ -166,10 +166,8 @@ ResizeWindowLeft(multiplier) {
     BlockInput MouseMove
     WinGetPos,X,Y,W,H,A
     fXAdjustment := W*multiplier
-    W += fXAdjustment
-    WinMove A,,X-fXAdjustment,Y,W,H
+    WinMove A,,(X-fXAdjustment),Y,(W+fXAdjustment),H
     BlockInput MouseMoveOff
-    return
 }
 
 ResizeWindowRight(multiplier) {
