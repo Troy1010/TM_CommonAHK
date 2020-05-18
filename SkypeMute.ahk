@@ -9,8 +9,13 @@ XButton1 Up:: ;If you want to change the push-to-talk keybind, replace ` (here a
 	}
 	Else
 	{
-		vWinTitle:="ahk_exe Skype.exe"
-		ControlFocus,, %vWinTitle%
-		ControlSend,, ^m, %vWinTitle%
+		if !WinExist("ahk_exe Discord.exe") {
+			WinGetTitle, vOldWinTitle
+			vSkypeWinTitle:="ahk_exe Skype.exe"
+			WinActivate, %vSkypeWinTitle%
+			sleep 50
+			SendInput, ^m
+			WinActivate, %vOldWinTitle%
+		}
 	}
 	return

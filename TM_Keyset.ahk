@@ -204,7 +204,7 @@ XButton1::ResetGlobals(),ControlSend2(,"{space}","ahk_exe Google Play Music Desk
 #Include SkypeMute.ahk
 #if (bDebug = true)
 F1::
-	MsgBox2(NarrateWindow("A"))
+	MsgBox2(!WinExist("ahk_exe Discord.exe"))
 	return
 F2::
 	MsgBox2(NarrateActiveWindow())
