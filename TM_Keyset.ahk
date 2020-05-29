@@ -175,7 +175,7 @@ XButton1 Up::
 	if (!GetKeyState("XButton2","P")) {
 		OpenFolderAndMoveToSection("C:\Dropbox\Projects\Coding", enum_ScreenSection.BotLeft)
 	} else {
-		OpenFolderAndMoveToSection("C:\Users\Troy\AndroidStudioProjects", enum_ScreenSection.BotLeft)
+		OpenFolderAndMoveToSection("C:\Dropbox\Projects\Coding\AndroidStudio", enum_ScreenSection.BotLeft)
 	}
 	return
 WheelUp::EasyResetMode(),MinimizeMouseoverWindow()
