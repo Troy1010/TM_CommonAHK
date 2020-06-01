@@ -1,7 +1,7 @@
 ;-------Init
 ;*Child scripts should use this callback
 init_TM_CommonAHK() {
-	global enum_ScreenSection := Object("Left", 0, "Right", 1, "BotLeft", 2, "BotRight", 3, "TopRight", 4, "TopLeft", 5, "Fullscreen", 6, "BigRight", 7)
+	global enum_ScreenSection := Object("Left", 0, "Right", 1, "BotLeft", 2, "BotRight", 3, "TopRight", 4, "TopLeft", 5, "Fullscreen", 6, "BigRight", 7, "BigRightSecondary", 8)
     FileDelete, %A_WorkingDir%\TMLog.txt
 	FormatTime, tempTime,, hh:mm:ss tt
     Log("#TMLog " tempTime)
@@ -64,16 +64,16 @@ CloseActiveWindow() {
 }
 
 SnapAWinToSection(eSection) {
-    ;Unsnap
+    ; Unsnap
     ;For some reason, if window is snapped to fullscreen, it will not unsnap by WinMove
     WinGetPos, xPos, yPos,,, A
     if ((xPos = -8) and (yPos = -8)) {
         Send #{Down}
     }
-    ;
+    ;Unsnap by WinMove
     WinMove,A,,100,100
     ; Snap AWin to section
-    enum_ScreenSection := Object("Left", 0, "Right", 1, "BotLeft", 2, "BotRight", 3, "TopRight", 4, "TopLeft", 5, "Fullscreen", 6, "BigRight", 7)
+    enum_ScreenSection := Object("Left", 0, "Right", 1, "BotLeft", 2, "BotRight", 3, "TopRight", 4, "TopLeft", 5, "Fullscreen", 6, "BigRight", 7, "BigRightSecondary", 8)
     switch eSection {
         case enum_ScreenSection.Left:
             Send {LWin Down}
@@ -114,6 +114,8 @@ SnapAWinToSection(eSection) {
             Send {Right}
             Send {LWin Up}
             MoveAWinToSection(enum_ScreenSection.BigRight)
+        case enum_ScreenSection.BigRightSecondary:
+            MsgBox2("Snapping to enum_ScreenSection.BigRightSecondary currently doesn't work")
     }
     return
 }
@@ -127,20 +129,24 @@ MoveAWinToSection(eSection) {
     posXLeft := -7
     posXMid := 953
     posYTop := 0
+    posYTopAlmost := 26
     posYMid := 525
     WidthHalfway := 974
     WidthFullway := 1926
     HeightHalfway := 532
     HeightFullway := 1056
+    HeightFullwayAlmost := 1031
     posXBigRight := 466
+    posXBigRightSecondary := 433
     WidthBigRight := 1461
+    WidthBigRightSecondary := 1493
     ;For some reason, if window is snapped to fullscreen, it will not automatically unsnap
     WinGetPos,posX,posY,,,A
     if ((posX = -8) and (posY = -8)) {
         Send #{Down}
     }
     ; Move AWin to section
-    enum_ScreenSection := Object("Left", 0, "Right", 1, "BotLeft", 2, "BotRight", 3, "TopRight", 4, "TopLeft", 5, "Fullscreen", 6, "BigRight", 7)
+    enum_ScreenSection := Object("Left", 0, "Right", 1, "BotLeft", 2, "BotRight", 3, "TopRight", 4, "TopLeft", 5, "Fullscreen", 6, "BigRight", 7, "BigRightSecondary", 8)
     switch eSection {
         case enum_ScreenSection.Left:
             WinMove,A,,posXLeft,posYTop,WidthHalfway,HeightFullway
@@ -158,6 +164,8 @@ MoveAWinToSection(eSection) {
             WinMove,A,,posXLeft,posYTop,WidthFullway,HeightFullway
         case enum_ScreenSection.BigRight:
             WinMove,A,,posXBigRight,posYTop,WidthBigRight,HeightFullway
+        case enum_ScreenSection.BigRightSecondary:
+            WinMove,A,,posXBigRightSecondary,posYTopAlmost,WidthBigRightSecondary,HeightFullwayAlmost
     }
     return
 }

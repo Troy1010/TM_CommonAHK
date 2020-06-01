@@ -112,7 +112,14 @@ XButton2 Up::
 	return
 #if IsDefaultContext() and (iXB2Count == 1)
 LButton::ResetGlobals(),MoveAWinToSection(enum_ScreenSection.BotLeft)
-RButton::ResetGlobals(),SnapAWinToSection(enum_ScreenSection.BigRight)
+RButton::
+	ResetGlobals()
+	if (WinActive("ahk_exe gitkraken.exe")) {
+		MoveAWinToSection(enum_ScreenSection.BigRightSecondary)
+	} else {
+		SnapAWinToSection(enum_ScreenSection.BigRight)
+	}
+	return
 XButton1 Up::
 	ResetGlobals()
 	if (!GetKeyState("XButton2","P")) {
@@ -207,7 +214,7 @@ F1::
 	MsgBox2(!WinExist("ahk_exe Discord.exe"))
 	return
 F2::
-	MsgBox2(NarrateActiveWindow())
+	MsgBox2(WinActive("ahk_exe gitkraken.exe"))
 	return
 F3::
     MouseGetPos,,, vMouseoverWin
