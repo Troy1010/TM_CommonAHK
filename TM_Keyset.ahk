@@ -117,7 +117,7 @@ RButton::
 	if (WinActive("ahk_exe gitkraken.exe")) {
 		MoveAWinToSection(enum_ScreenSection.BigRightSecondary)
 	} else {
-		SnapAWinToSection(enum_ScreenSection.BigRight)
+		MoveAWinToSection(enum_ScreenSection.BigRight)
 	}
 	return
 XButton1 Up::
