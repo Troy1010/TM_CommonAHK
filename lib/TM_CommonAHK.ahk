@@ -104,11 +104,7 @@ SnapAWinToSection(eSection) {
             Send {Up}
             Send {LWin Up}
         case enum_ScreenSection.Fullscreen:
-            Send {LWin Down}
-            Send {Up}
-            Send {Up}
-            Send {Up}
-            Send {LWin Up}
+            WinMaximize, A
         case enum_ScreenSection.BigRight:
             Send {LWin Down}
             Send {Right}

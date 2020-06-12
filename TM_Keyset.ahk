@@ -189,7 +189,7 @@ WheelUp::EasyResetMode(),MinimizeMouseoverWindow()
 WheelDown::EasyResetMode(),CloseMouseoverWindow()
 #if IsDefaultContext() and (iXB2Count == 3)
 LButton::ResetGlobals(),MoveAWinToSection(enum_ScreenSection.TopLeft)
-RButton::ResetGlobals(),MoveAWinToSection(enum_ScreenSection.Fullscreen)
+RButton::ResetGlobals(),SnapAWinToSection(enum_ScreenSection.Fullscreen)
 XButton1 Up::
 	ResetGlobals()
 	OpenCmdAtActiveWindow()
