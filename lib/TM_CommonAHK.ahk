@@ -51,6 +51,11 @@ CloseMouseoverWindow() {
     }
 }
 
+IsWinMinimized(vWin) {
+	WinGet MinMaxState, MinMax, %vWin%
+    return MinMaxState == -1
+}
+
 MinimizeMouseoverWindow() {
     MouseGetPos,,, vMouseoverWin
     if (!IsDesktop("ahk_id "+vMouseoverWin))
