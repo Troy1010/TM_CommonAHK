@@ -207,13 +207,17 @@ XButton1::ResetGlobals(),ControlSend2(,"{space}","ahk_exe Google Play Music Desk
 #Include PoE.ahk
 #if WinActive("Factorio")
 #Include Factorio.ahk
-;#if true
-;#Include SkypeMute.ahk
+#if true
+#Include SkypeMute.ahk
 #if (bDebug = true)
 F1::
-	MsgBox2(!WinExist("ahk_exe Discord.exe"))
+	WinGet MMX, MinMax, A
+
+	IfEqual MMX,0, WinMaximize, A
+	IfEqual MMX,1, WinRestore, A
 	return
 F2::
+	MsgBox2(!WinExist("ahk_exe Discord.exe"))
 	MsgBox2(WinActive("ahk_exe gitkraken.exe"))
 	return
 F3::
