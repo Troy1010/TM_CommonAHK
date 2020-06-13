@@ -18,9 +18,9 @@ XButton1 Up::
 		WinGetTitle, vOldWinTitle, A
 		vSkypeWinTitle:="ahk_exe Skype.exe"
 		WinActivate, %vSkypeWinTitle%
-		sleep 25
+		WinWait, %vSkypeWinTitle%,,1000
 		SendInput, ^m
-		sleep 25
+		sleep 10
 		; Log("vOldWinTitle:" %vOldWinTitle%)
 		WinActivate, %vOldWinTitle%
 	}
