@@ -15,13 +15,15 @@ XButton1 Up::
 	}
 	Else
 	{
-		WinGetTitle, vOldWinTitle, A
-		vSkypeWinTitle:="ahk_exe Skype.exe"
-		WinActivate, %vSkypeWinTitle%
-		WinWait, %vSkypeWinTitle%,,1000
-		SendInput, ^m
-		sleep 10
-		; Log("vOldWinTitle:" %vOldWinTitle%)
-		WinActivate, %vOldWinTitle%
+		if (A_TickCount - timestampSkypeMute > 500) {
+			WinGetTitle, vOldWinTitle, A
+			vSkypeWinTitle:="ahk_exe Skype.exe"
+			WinActivate, %vSkypeWinTitle%
+			WinWait, %vSkypeWinTitle%,,1000
+			SendInput, ^m
+			sleep 10
+			; Log("vOldWinTitle:" %vOldWinTitle%)
+			WinActivate, %vOldWinTitle%
+		}
 	}
 	return

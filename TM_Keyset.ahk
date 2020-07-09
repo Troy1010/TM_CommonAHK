@@ -10,6 +10,7 @@ fScrollFastTimer := 0
 iScrollCount := 0
 bScrollingFast := false
 fTimestamp := 0
+timestampSkypeMute = %A_TickCount% ; currently should be in SkypeMute, but idk how to refactor it
 ;-------Loop
 Loop
 {
@@ -97,6 +98,7 @@ WaiterXB2:
 MButton::WinTab()
 XButton1::F18
 XButton2::
+	timestampSkypeMute = %A_TickCount% ;Should be refactored out to SkypeMute
 	if (bEasyResetMode)
 	{
 		ResetGlobals()
