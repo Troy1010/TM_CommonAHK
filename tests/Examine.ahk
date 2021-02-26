@@ -1,0 +1,6 @@
+
+Function()
+
+Function() {
+	MsgBox, % "Hi"
+}
