@@ -12,39 +12,39 @@ bScrollingFast := false
 fTimestamp := 0
 timestampSkypeMute = %A_TickCount% ; currently should be in SkypeMute, but idk how to refactor it
 ;-------Loop
-Loop
-{
-	if (fScrollFastTimer > 0 and !bScrollingFast) {
-		fScrollFastTimer := Max(0,fScrollFastTimer - GetTimePassed(fTimestamp))
-	}
-	if (iScrollCount > 0) {
-		if (GetKeyState("WheelUp","P") != 0) ;is this necessary with SendInput?
-		{
-			if (iScrollCount > 30) {
-				iScrollCount -= 3
-				SendInput {Click WheelUp 3}
-			}
-			else {
-				iScrollCount -= 1
-				SendInput {Click WheelUp}
-			}
-		}
-	}
-	else if (iScrollCount < 0) {
-		if (GetKeyState("WheelDown","P") != 0)
-		{
-			if (iScrollCount < -30) {
-				iScrollCount += 3
-				SendInput {Click WheelDown 3}
-			}
-			else {
-				iScrollCount += 1
-				SendInput {Click WheelDown}
-			}
-		}
-	}
-	sleep 2
-}
+;Loop
+;{
+;	if (fScrollFastTimer > 0 and !bScrollingFast) {
+;		fScrollFastTimer := Max(0,fScrollFastTimer - GetTimePassed(fTimestamp))
+;	}
+;	if (iScrollCount > 0) {
+;		if (GetKeyState("WheelUp","P") != 0) ;is this necessary with SendInput?
+;		{
+;			if (iScrollCount > 30) {
+;				iScrollCount -= 3
+;				SendInput {Click WheelUp 3}
+;			}
+;			else {
+;				iScrollCount -= 1
+;				SendInput {Click WheelUp}
+;			}
+;		}
+;	}
+;	else if (iScrollCount < 0) {
+;		if (GetKeyState("WheelDown","P") != 0)
+;		{
+;			if (iScrollCount < -30) {
+;				iScrollCount += 3
+;				SendInput {Click WheelDown 3}
+;			}
+;			else {
+;				iScrollCount += 1
+;				SendInput {Click WheelDown}
+;			}
+;		}
+;	}
+;	sleep 2
+;}
 ;-------End Init
 return
 ;-------Safety Exit
