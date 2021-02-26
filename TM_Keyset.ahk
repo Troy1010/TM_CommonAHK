@@ -112,6 +112,9 @@ XButton2::
 XButton2 Up::
 	SetTimer, WaiterXB2, off
 	return
+#+s::
+	Run "res\ScreenSnip"
+	return
 #if IsDefaultContext() and (iXB2Count == 1)
 LButton::ResetGlobals(),MoveAWinToSection(enum_ScreenSection.BotLeft)
 RButton::
