@@ -74,7 +74,7 @@ ResetGlobals() {
 	SetTimer, WaiterXB2, off
 }
 IsDefaultContext() {
-	return !WinActive("Heroes of the Storm") and !WinActive("Vermintide 2") and !WinActive("Path") and !WinActive("Factorio")
+	return !WinActive("Heroes of the Storm") and !WinActive("Vermintide 2") and !WinActive("Path") and !WinActive("Factorio") and !WinActive("Risk")
 }
 OpenFolderAndMoveToSection(path, sectionEnumIndex) {
 	Run, Explorer %path%
@@ -209,6 +209,8 @@ XButton1::ResetGlobals(),ControlSend2(,"{space}","ahk_exe Google Play Music Desk
 #Include PoE.ahk
 #if WinActive("Factorio")
 #Include Factorio.ahk
+#if WinActive("Risk")
+#Include RiskOfRain2.ahk
 #if true
 #Include SkypeMute.ahk
 #if (bDebug = true)
